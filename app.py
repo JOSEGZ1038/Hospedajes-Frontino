@@ -1,11 +1,44 @@
 import sqlite3
 from flask import Flask, render_template, request, redirect, url_for, session, send_from_directory
 import os
+def limpiar_tipos():
+    conn = sqlite3.connect('inventario.db')
+    c = conn.cursor()
+    c.execute('SELECT id, tipo FROM hospedajes')
+    hospedajes = c.fetchall()
+    for id_, tipo in hospedajes:
+       
+        if tipo:
+            tipo_limpio = tipo.strip().lower()
+            c.execute('UPDATE hospedajes SET tipo=? WHERE id=?', (tipo_limpio, id_))
+    conn.commit()
+    conn.close()
+
+limpiar_tipos()
 
 app = Flask(__name__)
 app.secret_key = 'supersecretkey'  # Cambia esto por una clave segura en producción
 UPLOAD_FOLDER = os.path.join('static', 'uploads')
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+# Ruta para mostrar hospedajes filtrados por tipo
+@app.route('/tipo/<tipo>')
+def hospedajes_por_tipo(tipo):
+    conn = sqlite3.connect('inventario.db')
+    c = conn.cursor()
+    variantes = {
+        'hotel': ['hotel', 'hoteles'],
+        'glamping': ['glamping', 'glampings'],
+        'hostal': ['hostal', 'hostales']
+    }
+    tipos = variantes.get(tipo.lower(), [tipo.lower()])
+    placeholders = ','.join(['?'] * len(tipos))
+    query = f'SELECT * FROM hospedajes WHERE LOWER(tipo) IN ({placeholders})'
+    c.execute(query, tipos)
+    hospedajes = c.fetchall()
+    conn.close()
+    es_admin = session.get('usuario') == 'admin'
+    return render_template('index.html', hospedajes=hospedajes, es_admin=es_admin, tipo_seleccionado=tipo)
 
 # Ruta para ver y dejar reseñas de un hospedaje
 @app.route('/resenas/<int:hospedaje_id>', methods=['GET', 'POST'])
