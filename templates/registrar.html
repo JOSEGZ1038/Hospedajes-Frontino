@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Registrar Hospedaje</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container-fluid">
+        <a class="navbar-brand fw-bold" href="{{ url_for('index') }}">Inventario de Hospedajes</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('registrar') }}">Registrar hospedaje</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('logout') }}">Cerrar sesión</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<body class="bg-light">
+    <div class="container py-4">
+        <h1 class="mb-4">Registrar nuevo hospedaje en Frontino</h1>
+        <form method="post" enctype="multipart/form-data" class="card p-4 shadow-sm">
+            <div class="mb-3">
+                <label class="form-label">Nombre:</label>
+                <input type="text" class="form-control" name="nombre" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Dirección:</label>
+                <input type="text" class="form-control" name="direccion" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Teléfono:</label>
+                <input type="text" class="form-control" name="telefono" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Descripción:</label>
+                <textarea class="form-control" name="descripcion"></textarea>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Precio:</label>
+                <input type="number" class="form-control" name="precio" step="0.01" min="0">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Tipo:</label>
+                <input type="text" class="form-control" name="tipo">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Imagen del hotel:</label>
+                <input type="file" class="form-control" name="imagen" accept="image/*">
+            </div>
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary flex-fill">Registrar</button>
+                <a href="{{ url_for('index') }}" class="btn btn-secondary flex-fill">Volver al inventario</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

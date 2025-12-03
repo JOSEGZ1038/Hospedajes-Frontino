@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Inventario de Hospedajes - Frontino</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="{{ url_for('index') }}">Inventario de Hospedajes</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    {% if es_admin %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('registrar') }}">Registrar hospedaje</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('logout') }}">Cerrar sesión</a>
+                        </li>
+                    {% elif session.usuario == 'cliente' %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('logout') }}">Cerrar sesión</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('login') }}">Iniciar sesión</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container py-4">
+        <h1 class="mb-4 text-center">Hospedajes registrados en Frontino</h1>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Dirección</th>
+                        <th>Teléfono</th>
+                        <th>Descripción</th>
+                        <th>Precio</th>
+                        <th>Tipo</th>
+                        <th>Reseña</th>
+                        <th>Imagen</th>
+                        {% if es_admin %}<th>Acciones</th>{% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for hospedaje in hospedajes %}
+                    <tr>
+                        <td>{{ hospedaje[0] }}</td>
+                        <td>{{ hospedaje[1] }}</td>
+                        <td>
+                            {{ hospedaje[2] }}
+                            <div class="mt-2">
+                                <iframe
+                                    width="100%"
+                                    height="150"
+                                    style="border:0"
+                                    loading="lazy"
+                                    allowfullscreen
+                                    referrerpolicy="no-referrer-when-downgrade"
+                                    src="https://www.google.com/maps?q={{ hospedaje[2]|urlencode }}&output=embed">
+                                </iframe>
+                            </div>
+                        </td>
+                        
+                        <td>{{ hospedaje[3] }}</td>
+                        <td>{{ hospedaje[4] }}</td>
+                        <td>${{ '%.2f'|format(hospedaje[5]) }}</td>
+                        <td>{{ hospedaje[6] }}</td>
+                        <td><a href="{{ url_for('resenas', hospedaje_id=hospedaje[0]) }}" class="btn btn-info btn-sm">Ver Reseñas</a></td>
+                        <td>
+                            {% if hospedaje[7] %}
+                            <img src="{{ hospedaje[7] }}" alt="Imagen de {{ hospedaje[1] }}" style="max-width:100px; max-height:100px;">
+                            {% else %}
+                            <span class="text-muted">No disponible</span>
+                            {% endif %}
+                        </td>
+                        {% if es_admin %}
+                        <td>
+                            <a href="{{ url_for('editar', id=hospedaje[0]) }}" class="btn btn-warning btn-sm mb-1">Editar</a>
+                            <form method="post" action="{{ url_for('eliminar', id=hospedaje[0]) }}" style="display:inline;">
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de eliminar este hospedaje?');">Eliminar</button>
+                            </form>
+                        </td>
+                        {% endif %}
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="{% if es_admin %}10{% else %}9{% endif %}" class="text-center text-muted">No hay hospedajes registrados.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

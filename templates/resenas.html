@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Reseñas de {{ hospedaje[1] }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container-fluid">
+        <a class="navbar-brand fw-bold" href="{{ url_for('index') }}">Inventario de Hospedajes</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('index') }}">Inicio</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<body class="bg-light">
+    <div class="container py-4">
+        <h2 class="mb-3">Reseñas de {{ hospedaje[1] }}</h2>
+        <div class="mb-4">
+            <a href="{{ url_for('index') }}" class="btn btn-secondary btn-sm">Volver al inventario</a>
+        </div>
+        <div class="card mb-4 p-3">
+            <h5>Deja tu reseña</h5>
+            <form method="post">
+                <div class="mb-3">
+                    <label class="form-label">Comentario:</label>
+                    <textarea class="form-control" name="comentario" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Enviar reseña</button>
+            </form>
+        </div>
+        <h5>Reseñas recientes</h5>
+        {% for resena in resenas %}
+            <div class="card mb-2 p-2">
+                <strong>{{ resena[0] or 'Anónimo' }}</strong> <span class="text-muted" style="font-size:0.9em">({{ resena[2] }})</span><br>
+                {{ resena[1] }}
+            </div>
+        {% else %}
+            <p class="text-muted">Aún no hay reseñas para este hospedaje.</p>
+        {% endfor %}
+    </div>
+</body>
+</html>
