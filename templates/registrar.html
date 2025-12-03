@@ -13,6 +13,17 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('hospedajes_por_tipo', tipo='hotel') }}">Hotel</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('hospedajes_por_tipo', tipo='glamping') }}">Glamping</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('hospedajes_por_tipo', tipo='hostal') }}">Hostales</a>
+                </li>
+            </ul>
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('registrar') }}">Registrar hospedaje</a>
